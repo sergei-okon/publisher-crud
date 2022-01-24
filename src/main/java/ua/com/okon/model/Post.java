@@ -1,6 +1,5 @@
 package ua.com.okon.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class Post {

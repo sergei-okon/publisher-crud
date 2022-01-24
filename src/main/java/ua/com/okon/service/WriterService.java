@@ -23,12 +23,14 @@ public class WriterService {
     }
 
     public void save(Writer writer) {
-
+        writerRepository.save(writer);
     }
 
     public void delete(Long id) {
+        writerRepository.deleteById(id);
     }
 
     public void update(Writer writer, Long id) {
+        writerRepository.update(id, writer);
     }
 }

@@ -1,43 +1,34 @@
 package ua.com.okon.repository;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import ua.com.okon.model.Writer;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class JsonWriterRepositoryImpl implements WriterRepository {
 
-    private final static File writersJson = new File("src/main/resources/writers.json");
-    private final static Gson gson = new Gson();
+    private final JsonSource<Writer> jsonSource;
+
+    public JsonWriterRepositoryImpl() {
+        jsonSource = new JsonSource<>(new File("src/main/resources/writers.json"));
+    }
 
     @Override
     public List<Writer> findAll() {
-        List<Writer> writers = new ArrayList<>();
+        List<Writer> writers = jsonSource.getJsonFromFile(Writer.class);
 
-        try (FileReader fileReader = new FileReader(writersJson)) {
-            Type founderListType = new TypeToken<ArrayList<Writer>>() {
-            }.getType();
-
-            writers = gson.fromJson(fileReader, founderListType);
-
-        } catch (IOException e) {
-            System.out.println("File not found");
-            e.printStackTrace();
+        if (writers == null) {
+            System.out.println("DB is empty");
+            return new ArrayList<>();
         }
         return writers;
     }
 
     @Override
     public Writer findById(Long id) {
-        List<Writer> writers = getListWritersFromFile();
+        List<Writer> writers = findAll();
 
         Writer writer = writers.stream()
                 .filter(writerTemp -> Objects.equals(writerTemp.getId(), id))
@@ -51,12 +42,15 @@ public class JsonWriterRepositoryImpl implements WriterRepository {
 
     @Override
     public Writer save(Writer writer) {
-        List<Writer> writers = getListWritersFromFile();
+        List<Writer> writers = findAll();
 
         final Writer existingWriter = findById(writer.getId());
+
         if (existingWriter == null) {
             writers.add(writer);
-            putJsonToFile(writers);
+            jsonSource.putJsonToFile(writers);
+            System.out.println("Added writer with id " + writer.getId());
+
         } else {
             System.out.println("Unable to add writer to database. " +
                     "The writer with id " + writer.getId() + " is already in the database");
@@ -67,11 +61,11 @@ public class JsonWriterRepositoryImpl implements WriterRepository {
 
     @Override
     public void deleteById(Long id) {
-        List<Writer> writers = getListWritersFromFile();
+        List<Writer> writers = findAll();
 
         if (findById(id) != null) {
             writers.removeIf(writer -> Objects.equals(writer.getId(), id));
-            putJsonToFile(writers);
+            jsonSource.putJsonToFile(writers);
             System.out.println("Deleted writer by id " + id);
 
         } else {
@@ -86,7 +80,7 @@ public class JsonWriterRepositoryImpl implements WriterRepository {
             System.out.println("Id is null. Unable to update writer");
         }
 
-        List<Writer> writers = getListWritersFromFile();
+        List<Writer> writers = findAll();
 
         if (findById(id) != null) {
             for (Writer writerTemp : writers) {
@@ -95,33 +89,10 @@ public class JsonWriterRepositoryImpl implements WriterRepository {
                     writerTemp.setLastName(writer.getLastName());
                     writerTemp.setPosts(writer.getPosts());
                 }
-                putJsonToFile(writers);
+                jsonSource.putJsonToFile(writers);
             }
         } else {
             System.out.println("Writer with id " + id + " not found");
         }
-    }
-
-    private void putJsonToFile(List<Writer> writers) {
-        try (FileWriter fileWriter = new FileWriter(writersJson)) {
-            gson.toJson(writers);
-            fileWriter.write(gson.toJson(writers));
-
-        } catch (IOException e) {
-            System.out.println("File not found");
-            e.printStackTrace();
-        }
-    }
-
-    private List<Writer> getListWritersFromFile() {
-        List<Writer> writers;
-
-        if (findAll() == null) {
-            System.out.println("DB is EMPTY");
-            writers = new ArrayList<>();
-        } else {
-            writers = findAll();
-        }
-        return writers;
     }
 }
