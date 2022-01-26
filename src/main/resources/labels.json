@@ -1,1 +1,26 @@
-[{"id":1,"name":"Italy"}]
+[
+  {
+    "id": 2,
+    "name": "Cash"
+  },
+  {
+    "id": 3,
+    "name": "register"
+  },
+  {
+    "id": 4,
+    "name": "USA"
+  },
+  {
+    "id": 5,
+    "name": "TRAMP"
+  },
+  {
+    "id": 6,
+    "name": "Italy"
+  },
+  {
+    "id": 7,
+    "name": "Vocation"
+  }
+]

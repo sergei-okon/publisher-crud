@@ -1,4 +1,4 @@
-package ua.com.okon.repository;
+package ua.com.okonsergei.repository;
 
 import java.util.List;
 

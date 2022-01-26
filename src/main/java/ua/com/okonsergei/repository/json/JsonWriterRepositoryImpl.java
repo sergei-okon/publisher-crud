@@ -1,6 +1,7 @@
-package ua.com.okon.repository;
+package ua.com.okonsergei.repository.json;
 
-import ua.com.okon.model.Writer;
+import ua.com.okonsergei.model.Writer;
+import ua.com.okonsergei.repository.WriterRepository;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,15 +30,9 @@ public class JsonWriterRepositoryImpl implements WriterRepository {
     @Override
     public Writer findById(Long id) {
         List<Writer> writers = findAll();
-
-        Writer writer = writers.stream()
+        return writers.stream()
                 .filter(writerTemp -> Objects.equals(writerTemp.getId(), id))
                 .findAny().orElse(null);
-
-        if (writer == null) {
-            System.out.println("Writer with id " + id + " not found");
-        }
-        return writer;
     }
 
     @Override
@@ -48,6 +43,7 @@ public class JsonWriterRepositoryImpl implements WriterRepository {
 
         if (existingWriter == null) {
             writers.add(writer);
+
             jsonSource.putJsonToFile(writers);
             System.out.println("Added writer with id " + writer.getId());
 

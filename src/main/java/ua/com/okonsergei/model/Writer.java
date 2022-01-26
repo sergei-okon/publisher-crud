@@ -1,4 +1,4 @@
-package ua.com.okon.model;
+package ua.com.okonsergei.model;
 
 import java.util.List;
 import java.util.Objects;

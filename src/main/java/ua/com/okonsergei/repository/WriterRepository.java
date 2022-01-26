@@ -1,6 +1,6 @@
-package ua.com.okon.repository;
+package ua.com.okonsergei.repository;
 
-import ua.com.okon.model.Writer;
+import ua.com.okonsergei.model.Writer;
 
 public interface WriterRepository extends GenericRepository<Writer, Long> {
 

@@ -1,1 +1,18 @@
-[{"id":1,"content":"Italy has been closed","created":5,"updated":5,"labels":[{"id":1,"name":"Ukraine"}]}]
+[
+  {
+    "id": 1,
+    "content": "sss",
+    "created": 1643238752046,
+    "updated": 1643239990336,
+    "labels": [
+      {
+        "id": 2,
+        "name": "Cash"
+      },
+      {
+        "id": 5,
+        "name": "TRAMP"
+      }
+    ]
+  }
+]

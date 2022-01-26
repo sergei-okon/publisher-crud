@@ -1,8 +1,11 @@
-package ua.com.okon.repository;
+package ua.com.okonsergei.repository.json;
 
-import ua.com.okon.model.Post;
+import ua.com.okonsergei.model.Post;
+import ua.com.okonsergei.repository.PostRepository;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,15 +32,9 @@ public class JsonPostRepositoryImpl implements PostRepository {
     @Override
     public Post findById(Long id) {
         List<Post> posts = findAll();
-
-        Post post = posts.stream()
+        return posts.stream()
                 .filter(postTemp -> Objects.equals(postTemp.getId(), id))
                 .findAny().orElse(null);
-
-        if (post == null) {
-            System.out.println("Post with id " + id + " not found");
-        }
-        return post;
     }
 
     @Override
@@ -47,6 +44,10 @@ public class JsonPostRepositoryImpl implements PostRepository {
         final Post existingPost = findById(post.getId());
 
         if (existingPost == null) {
+            Long currentTime = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            post.setCreated(currentTime);
+            post.setUpdated(currentTime);
+
             posts.add(post);
             jsonSource.putJsonToFile(posts);
             System.out.println("Added post with id " + post.getId());
@@ -80,18 +81,19 @@ public class JsonPostRepositoryImpl implements PostRepository {
             System.out.println("Id is null. Unable to update post");
         }
         List<Post> posts = findAll();
+        Long currentTime = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
         if (findById(id) != null) {
             for (Post postTemp : posts) {
                 if (Objects.equals(postTemp.getId(), id)) {
                     postTemp.setContent(post.getContent());
-                    postTemp.setCreated(post.getCreated());
-                    postTemp.setUpdated(post.getUpdated());
+                    postTemp.setLabels(post.getLabels());
+                    postTemp.setUpdated(currentTime);
                 }
                 jsonSource.putJsonToFile(posts);
             }
         } else {
-            System.out.println("Writer with id " + id + " not found");
+            System.out.println("Post with id " + id + " not found");
         }
     }
 }

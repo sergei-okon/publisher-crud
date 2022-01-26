@@ -1,4 +1,4 @@
-package ua.com.okon.file;
+package ua.com.okonsergei.file;
 
 import java.io.FileWriter;
 import java.io.IOException;

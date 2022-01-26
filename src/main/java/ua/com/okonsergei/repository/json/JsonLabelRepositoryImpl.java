@@ -1,6 +1,7 @@
-package ua.com.okon.repository;
+package ua.com.okonsergei.repository.json;
 
-import ua.com.okon.model.Label;
+import ua.com.okonsergei.model.Label;
+import ua.com.okonsergei.repository.LabelRepository;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,15 +30,9 @@ public class JsonLabelRepositoryImpl implements LabelRepository {
     @Override
     public Label findById(Long id) {
         List<Label> labels = findAll();
-
-        Label label = labels.stream()
+        return labels.stream()
                 .filter(labelTemp -> Objects.equals(labelTemp.getId(), id))
                 .findAny().orElse(null);
-
-        if (label == null) {
-            System.out.println("Label with id " + id + " not found");
-        }
-        return label;
     }
 
     @Override

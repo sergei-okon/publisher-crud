@@ -1,19 +1,22 @@
-package ua.com.okon.model;
+package ua.com.okonsergei.model;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Post {
+
     private Long id;
     private String content;
-    private int created;
-    private int updated;
-
+    private Long created;
+    private Long updated;
     private List<Label> labels;
 
     public Post() {
     }
 
-    public Post(Long id, String content, int created, int updated, List<Label> labels) {
+    public Post(Long id, String content, Long created, Long updated, List<Label> labels) {
         this.id = id;
         this.content = content;
         this.created = created;
@@ -37,19 +40,19 @@ public class Post {
         this.content = content;
     }
 
-    public int getCreated() {
+    public Long getCreated() {
         return created;
     }
 
-    public void setCreated(int created) {
+    public void setCreated(Long created) {
         this.created = created;
     }
 
-    public int getUpdated() {
+    public Long getUpdated() {
         return updated;
     }
 
-    public void setUpdated(int updated) {
+    public void setUpdated(Long updated) {
         this.updated = updated;
     }
 
@@ -66,8 +69,10 @@ public class Post {
         return "Post{" +
                 "id=" + id +
                 ", content='" + content + '\'' +
-                ", created=" + created +
-                ", updated=" + updated +
+                ", created=" + LocalDateTime.ofInstant(Instant.ofEpochMilli(created),
+                TimeZone.getDefault().toZoneId()) +
+                ", updated=" + LocalDateTime.ofInstant(Instant.ofEpochMilli(updated),
+                TimeZone.getDefault().toZoneId()) +
                 ", labels=" + labels +
                 '}';
     }

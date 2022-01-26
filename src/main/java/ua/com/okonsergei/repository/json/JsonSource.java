@@ -1,15 +1,14 @@
-package ua.com.okon.repository;
+package ua.com.okonsergei.repository.json;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JsonSource<T> {
 
@@ -22,7 +21,6 @@ public class JsonSource<T> {
 
     public void putJsonToFile(List<T> t) {
         try (FileWriter fileWriter = new FileWriter(file)) {
-            gson.toJson(t);
             fileWriter.write(gson.toJson(t));
 
         } catch (IOException e) {
@@ -44,5 +42,36 @@ public class JsonSource<T> {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static Long incrementId(String str) {
+        Map<String, Long> idMap = new HashMap<>();
+
+        long incrementedId = 0L;
+
+        try (FileReader fileReader = new FileReader("src/main/resources/id.json")) {
+
+            Type founderListType = new TypeToken<HashMap<String, Long>>() {
+            }.getType();
+            idMap = gson.fromJson(fileReader, founderListType);
+
+        } catch (IOException e) {
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+
+        try (FileWriter fileWriter = new FileWriter("src/main/resources/id.json")) {
+            incrementedId = idMap.get(str) + 1;
+
+            idMap.put(str, incrementedId);
+            System.out.println(idMap);
+
+            fileWriter.write(gson.toJson(idMap));
+
+        } catch (IOException e) {
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+        return incrementedId;
     }
 }

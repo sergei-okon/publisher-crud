@@ -1,6 +1,6 @@
-package ua.com.okon.repository;
+package ua.com.okonsergei.repository;
 
-import ua.com.okon.model.Post;
+import ua.com.okonsergei.model.Post;
 
 public interface PostRepository extends GenericRepository<Post, Long> {
 
