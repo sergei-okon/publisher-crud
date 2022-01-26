@@ -18,7 +18,6 @@ public class PostView extends BaseView {
     private final LabelController labelController = new LabelController();
     private final Scanner scanner = new Scanner(System.in);
 
-
     @Override
     void create() {
         Post post = new Post();
