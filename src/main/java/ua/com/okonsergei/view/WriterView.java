@@ -2,13 +2,12 @@ package ua.com.okonsergei.view;
 
 import ua.com.okonsergei.controller.PostController;
 import ua.com.okonsergei.controller.WriterController;
+import ua.com.okonsergei.model.Message;
 import ua.com.okonsergei.model.Post;
 import ua.com.okonsergei.model.Writer;
-import ua.com.okonsergei.repository.json.JsonSource;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class WriterView extends BaseView {
 
@@ -19,7 +18,6 @@ public class WriterView extends BaseView {
     @Override
     void create() {
         Writer writer = new Writer();
-        Long writerId = JsonSource.incrementId("writerId");
 
         System.out.println("Input Writer firstName");
         String firstName = scanner.next();
@@ -33,12 +31,15 @@ public class WriterView extends BaseView {
 
         List<Post> posts = new ArrayList<>();
 
-        String[] postArray = post.split(",");
+        String[] postIds = post.replace(" ", "").split(",");
+        Set<String> uniquePostIds = Arrays.stream(postIds).collect(Collectors.toSet());
 
-        for (String s : postArray) {
-            posts.add(postController.findById(Long.valueOf(s)));
+        for (String id : uniquePostIds) {
+            Post byId = postController.findById(Long.valueOf(id));
+            if (byId != null) {
+                posts.add(byId);
+            }
         }
-        writer.setId(writerId);
         writer.setFirstName(firstName);
         writer.setLastName(lastName);
         writer.setPosts(posts);

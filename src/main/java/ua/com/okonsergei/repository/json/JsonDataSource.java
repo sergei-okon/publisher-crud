@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JsonSource<T> {
+public class JsonDataSource<T> {
 
     private final static Gson gson = new Gson();
     private final File file;
 
-    public JsonSource(File file) {
+    public JsonDataSource(File file) {
         this.file = file;
     }
 
@@ -44,7 +44,7 @@ public class JsonSource<T> {
         return list;
     }
 
-    public static Long incrementId(String str) {
+    public Long incrementId(String tableName) {
         Map<String, Long> idMap = new HashMap<>();
 
         long incrementedId = 0L;
@@ -61,9 +61,9 @@ public class JsonSource<T> {
         }
 
         try (FileWriter fileWriter = new FileWriter("src/main/resources/id.json")) {
-            incrementedId = idMap.get(str) + 1;
+            incrementedId = idMap.get(tableName) + 1;
 
-            idMap.put(str, incrementedId);
+            idMap.put(tableName, incrementedId);
             System.out.println(idMap);
 
             fileWriter.write(gson.toJson(idMap));

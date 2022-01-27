@@ -1,4 +1,4 @@
-package ua.com.okonsergei.view;
+package ua.com.okonsergei.model;
 
 public enum Message {
 
@@ -9,7 +9,7 @@ public enum Message {
             3 Delete
             4 Show All
             -----------------------------------------------
-            5 Exit"""),
+            0 Exit"""),
     ERROR_INPUT("Invalid number entered"),
     SUCCESSFUL_OPERATION("Successful operation");
 

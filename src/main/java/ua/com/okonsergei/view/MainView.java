@@ -1,5 +1,7 @@
 package ua.com.okonsergei.view;
 
+import ua.com.okonsergei.model.Message;
+
 import java.util.Scanner;
 
 public class MainView {
@@ -7,7 +9,6 @@ public class MainView {
     private final WriterView writerView = new WriterView();
     private final LabelView labelView = new LabelView();
     private final PostView postView = new PostView();
-    private final PostStatusView postStatusView = new PostStatusView();
 
     private final Scanner scanner = new Scanner(System.in);
 
@@ -15,48 +16,27 @@ public class MainView {
     }
 
     public void run() {
+        String mainMenu = """
+                MAIN MENU
+                Make your choice:
+                1 Writer
+                2 Label
+                3 Post
+                ____________________________________________
+                0 Exit""";
+
         boolean exit = false;
-        try {
-            String mainMenu = """
-                    MAIN MENU
-                    Make your choice:
-                    1 Writer
-                    2 Label
-                    3 Post
-                    4 PostStatus
-                    ____________________________________________
-                    5 Exit""";
-
+        while (!exit) {
             System.out.println(Message.LINE.getMessage() + "\n" + mainMenu);
+            String input = scanner.next();
 
-            String choice = scanner.next();
-
-            switch (choice) {
-                case "1":
-                    writerView.showSecondMenu();
-                    break;
-                case "2":
-                    labelView.showSecondMenu();
-                    break;
-                case "3":
-                    postView.showSecondMenu();
-                    break;
-                case "4":
-//                postStatusView.showMenu();
-//                break;
-                case "5":
-                    exit = true;
-                    break;
-                default:
-                    System.out.println(Message.ERROR_INPUT.getMessage());
-                    run();
-
+            switch (input) {
+                case "1" -> writerView.showSecondMenu();
+                case "2" -> labelView.showSecondMenu();
+                case "3" -> postView.showSecondMenu();
+                case "0" -> exit = true;
+                default -> System.out.println(Message.ERROR_INPUT.getMessage());
             }
-            if (exit) {
-                return;
-            }
-        } finally {
-            scanner.close();
         }
     }
 }

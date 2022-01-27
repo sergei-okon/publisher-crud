@@ -3,8 +3,9 @@ package ua.com.okonsergei.view;
 import ua.com.okonsergei.controller.LabelController;
 import ua.com.okonsergei.controller.PostController;
 import ua.com.okonsergei.model.Label;
+import ua.com.okonsergei.model.Message;
 import ua.com.okonsergei.model.Post;
-import ua.com.okonsergei.repository.json.JsonSource;
+import ua.com.okonsergei.repository.json.JsonDataSource;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,7 +22,6 @@ public class PostView extends BaseView {
     @Override
     void create() {
         Post post = new Post();
-        Long postId = JsonSource.incrementId("postId");
 
         System.out.println("Input POST content");
         String content = scanner.nextLine();
@@ -37,7 +37,6 @@ public class PostView extends BaseView {
         for (String s : postArray) {
             labels.add(labelController.findById(Long.valueOf(s)));
         }
-        post.setId(postId);
         post.setContent(content);
         post.setCreated(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         post.setUpdated(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());

@@ -10,15 +10,15 @@ import java.util.Objects;
 
 public class JsonLabelRepositoryImpl implements LabelRepository {
 
-    private final JsonSource<Label> jsonSource;
+    private final JsonDataSource<Label> jsonDataSource;
 
     public JsonLabelRepositoryImpl() {
-        jsonSource = new JsonSource<>(new File("src/main/resources/labels.json"));
+        jsonDataSource = new JsonDataSource<>(new File("src/main/resources/labels.json"));
     }
 
     @Override
     public List<Label> findAll() {
-        List<Label> labels = jsonSource.getJsonFromFile(Label.class);
+        List<Label> labels = jsonDataSource.getJsonFromFile(Label.class);
 
         if (labels == null) {
             System.out.println("DB is empty");
@@ -39,18 +39,13 @@ public class JsonLabelRepositoryImpl implements LabelRepository {
     public Label save(Label label) {
         List<Label> labels = findAll();
 
-        final Label existingLabels = findById(label.getId());
+        final Long labelId = jsonDataSource.incrementId("labelId");
+        label.setId(labelId);
+        labels.add(label);
 
-        if (existingLabels == null) {
-            labels.add(label);
-            jsonSource.putJsonToFile(labels);
-            System.out.println("Added label with id " + label.getId());
+        jsonDataSource.putJsonToFile(labels);
+        System.out.println("Added label with id " + label.getId());
 
-        } else {
-            System.out.println("Unable to add label to database. " +
-                    "The label with id " + label.getId() + " is already in the database");
-            return existingLabels;
-        }
         return label;
     }
 
@@ -60,7 +55,7 @@ public class JsonLabelRepositoryImpl implements LabelRepository {
 
         if (findById(id) != null) {
             labels.removeIf(label -> Objects.equals(label.getId(), id));
-            jsonSource.putJsonToFile(labels);
+            jsonDataSource.putJsonToFile(labels);
             System.out.println("Deleted label by id " + id);
 
         } else {
@@ -82,7 +77,7 @@ public class JsonLabelRepositoryImpl implements LabelRepository {
                 if (Objects.equals(labelTemp.getId(), id)) {
                     labelTemp.setName(label.getName());
                 }
-                jsonSource.putJsonToFile(labels);
+                jsonDataSource.putJsonToFile(labels);
             }
         } else {
             System.out.println("Labels with id " + id + " not found");

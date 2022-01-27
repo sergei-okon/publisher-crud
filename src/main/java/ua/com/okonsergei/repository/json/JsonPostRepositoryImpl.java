@@ -12,15 +12,15 @@ import java.util.Objects;
 
 public class JsonPostRepositoryImpl implements PostRepository {
 
-    private final JsonSource<Post> jsonSource;
+    private final JsonDataSource<Post> jsonDataSource;
 
     public JsonPostRepositoryImpl() {
-        jsonSource = new JsonSource<>(new File("src/main/resources/posts.json"));
+        jsonDataSource = new JsonDataSource<>(new File("src/main/resources/posts.json"));
     }
 
     @Override
     public List<Post> findAll() {
-        List<Post> posts = jsonSource.getJsonFromFile(Post.class);
+        List<Post> posts = jsonDataSource.getJsonFromFile(Post.class);
 
         if (posts == null) {
             System.out.println("DB is empty");
@@ -40,23 +40,17 @@ public class JsonPostRepositoryImpl implements PostRepository {
     @Override
     public Post save(Post post) {
         List<Post> posts = findAll();
+        Long currentTime = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        Long postId = jsonDataSource.incrementId("postId");
 
-        final Post existingPost = findById(post.getId());
+        post.setId(postId);
+        post.setCreated(currentTime);
+        post.setUpdated(currentTime);
 
-        if (existingPost == null) {
-            Long currentTime = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-            post.setCreated(currentTime);
-            post.setUpdated(currentTime);
+        posts.add(post);
+        jsonDataSource.putJsonToFile(posts);
+        System.out.println("Added post with id " + post.getId());
 
-            posts.add(post);
-            jsonSource.putJsonToFile(posts);
-            System.out.println("Added post with id " + post.getId());
-
-        } else {
-            System.out.println("Unable to add post to database. " +
-                    "The post with id " + post.getId() + " is already in the database");
-            return existingPost;
-        }
         return post;
     }
 
@@ -66,7 +60,7 @@ public class JsonPostRepositoryImpl implements PostRepository {
 
         if (findById(id) != null) {
             posts.removeIf(post -> Objects.equals(post.getId(), id));
-            jsonSource.putJsonToFile(posts);
+            jsonDataSource.putJsonToFile(posts);
             System.out.println("Deleted post by id " + id);
 
         } else {
@@ -90,7 +84,7 @@ public class JsonPostRepositoryImpl implements PostRepository {
                     postTemp.setLabels(post.getLabels());
                     postTemp.setUpdated(currentTime);
                 }
-                jsonSource.putJsonToFile(posts);
+                jsonDataSource.putJsonToFile(posts);
             }
         } else {
             System.out.println("Post with id " + id + " not found");

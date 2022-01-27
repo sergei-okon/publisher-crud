@@ -10,15 +10,15 @@ import java.util.Objects;
 
 public class JsonWriterRepositoryImpl implements WriterRepository {
 
-    private final JsonSource<Writer> jsonSource;
+    private final JsonDataSource<Writer> jsonDataSource;
 
     public JsonWriterRepositoryImpl() {
-        jsonSource = new JsonSource<>(new File("src/main/resources/writers.json"));
+        jsonDataSource = new JsonDataSource<>(new File("src/main/resources/writers.json"));
     }
 
     @Override
     public List<Writer> findAll() {
-        List<Writer> writers = jsonSource.getJsonFromFile(Writer.class);
+        List<Writer> writers = jsonDataSource.getJsonFromFile(Writer.class);
 
         if (writers == null) {
             System.out.println("DB is empty");
@@ -39,19 +39,13 @@ public class JsonWriterRepositoryImpl implements WriterRepository {
     public Writer save(Writer writer) {
         List<Writer> writers = findAll();
 
-        final Writer existingWriter = findById(writer.getId());
+        Long writerId = jsonDataSource.incrementId("writerId");
+        writer.setId(writerId);
+        writers.add(writer);
 
-        if (existingWriter == null) {
-            writers.add(writer);
+        jsonDataSource.putJsonToFile(writers);
+        System.out.println("Added writer with id " + writer.getId());
 
-            jsonSource.putJsonToFile(writers);
-            System.out.println("Added writer with id " + writer.getId());
-
-        } else {
-            System.out.println("Unable to add writer to database. " +
-                    "The writer with id " + writer.getId() + " is already in the database");
-            return existingWriter;
-        }
         return writer;
     }
 
@@ -61,7 +55,7 @@ public class JsonWriterRepositoryImpl implements WriterRepository {
 
         if (findById(id) != null) {
             writers.removeIf(writer -> Objects.equals(writer.getId(), id));
-            jsonSource.putJsonToFile(writers);
+            jsonDataSource.putJsonToFile(writers);
             System.out.println("Deleted writer by id " + id);
 
         } else {
@@ -85,7 +79,7 @@ public class JsonWriterRepositoryImpl implements WriterRepository {
                     writerTemp.setLastName(writer.getLastName());
                     writerTemp.setPosts(writer.getPosts());
                 }
-                jsonSource.putJsonToFile(writers);
+                jsonDataSource.putJsonToFile(writers);
             }
         } else {
             System.out.println("Writer with id " + id + " not found");

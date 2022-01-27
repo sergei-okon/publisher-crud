@@ -1,5 +1,7 @@
 package ua.com.okonsergei.view;
 
+import ua.com.okonsergei.model.Message;
+
 import java.util.Scanner;
 
 public abstract class BaseView {
@@ -20,17 +22,16 @@ public abstract class BaseView {
             System.out.println(Message.LINE.getMessage());
             System.out.println(Message.SECOND_MENU.getMessage());
             System.out.println(Message.LINE.getMessage());
-            String response = scanner.next();
+            String input = scanner.next();
 
-            switch (response) {
+            switch (input) {
                 case "1" -> create();
                 case "2" -> edit();
                 case "3" -> delete();
                 case "4" -> findAll();
-                case "5" -> exit = true;
+                case "0" -> exit = true;
                 default -> System.out.println(Message.ERROR_INPUT.getMessage());
             }
         }
-        scanner.close();
     }
 }
