@@ -5,13 +5,11 @@ import ua.com.okonsergei.controller.PostController;
 import ua.com.okonsergei.model.Label;
 import ua.com.okonsergei.model.Message;
 import ua.com.okonsergei.model.Post;
-import ua.com.okonsergei.repository.json.JsonDataSource;
+import ua.com.okonsergei.utils.ConvertLocalDateTime;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PostView extends BaseView {
 
@@ -27,19 +25,23 @@ public class PostView extends BaseView {
         String content = scanner.nextLine();
 
         System.out.println("Input Label id via ' , ' ");
-        scanner.nextLine();
         String label = scanner.nextLine();
 
         List<Label> labels = new ArrayList<>();
 
-        String[] postArray = label.split(",");
+        String[] labelIds = label.replace(" ", "").split(",");
+        Set<String> uniqueLabelsIds = Arrays.stream(labelIds).collect(Collectors.toSet());
 
-        for (String s : postArray) {
-            labels.add(labelController.findById(Long.valueOf(s)));
+        for (String id : uniqueLabelsIds) {
+            Label byId = labelController.findById(Long.valueOf(id));
+            if (byId != null) {
+                labels.add(byId);
+            }
         }
+
         post.setContent(content);
-        post.setCreated(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        post.setUpdated(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        post.setCreated(ConvertLocalDateTime.convertLocalDateTimeToLong(LocalDateTime.now()));
+        post.setUpdated(ConvertLocalDateTime.convertLocalDateTimeToLong(LocalDateTime.now()));
         post.setLabels(labels);
 
         postController.save(post);
@@ -68,7 +70,7 @@ public class PostView extends BaseView {
         Post updatePost = new Post();
         updatePost.setId(id);
         updatePost.setContent(content);
-        updatePost.setUpdated(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        updatePost.setUpdated(ConvertLocalDateTime.convertLocalDateTimeToLong(LocalDateTime.now()));
         updatePost.setLabels(labels);
 
         postController.update(id, updatePost);

@@ -1,5 +1,7 @@
 package ua.com.okonsergei.model;
 
+import ua.com.okonsergei.utils.ConvertLocalDateTime;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -69,10 +71,8 @@ public class Post {
         return "Post{" +
                 "id=" + id +
                 ", content='" + content + '\'' +
-                ", created=" + LocalDateTime.ofInstant(Instant.ofEpochMilli(created),
-                TimeZone.getDefault().toZoneId()) +
-                ", updated=" + LocalDateTime.ofInstant(Instant.ofEpochMilli(updated),
-                TimeZone.getDefault().toZoneId()) +
+                ", created=" + ConvertLocalDateTime.convertLongToLocalDateTime(created) +
+                ", updated=" + ConvertLocalDateTime.convertLongToLocalDateTime(updated) +
                 ", labels=" + labels +
                 '}';
     }

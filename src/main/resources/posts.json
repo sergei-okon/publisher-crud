@@ -1,18 +1,1 @@
-[
-  {
-    "id": 1,
-    "content": "sss",
-    "created": 1643238752046,
-    "updated": 1643239990336,
-    "labels": [
-      {
-        "id": 2,
-        "name": "Cash"
-      },
-      {
-        "id": 5,
-        "name": "TRAMP"
-      }
-    ]
-  }
-]
+[{"id":1,"content":"sss","created":1643238752046,"updated":1643239990336,"labels":[{"id":2,"name":"Cash"},{"id":5,"name":"TRAMP"}]},{"id":3,"content":"Java is the most popular language","created":1643477312235,"updated":1643477312235,"labels":[{"id":9,"name":"Java"}]}]
