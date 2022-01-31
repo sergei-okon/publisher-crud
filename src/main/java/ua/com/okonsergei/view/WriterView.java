@@ -50,8 +50,16 @@ public class WriterView extends BaseView {
     @Override
     void edit() {
         System.out.println("Editing Writer... Input id ");
-        Long id = Long.valueOf(scanner.next());
-
+        Long id;
+        while (!scanner.hasNextLong()) {
+            System.out.println("That not correct id");
+            scanner.next();
+        }
+        id = scanner.nextLong();
+        if (writerController.findById(id) == null) {
+            System.out.println("Writer with id " + id + "not found");
+            return;
+        }
         System.out.println("Input Writer new first name");
         String firstName = scanner.next();
 

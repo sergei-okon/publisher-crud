@@ -25,7 +25,16 @@ public class LabelView extends BaseView {
     @Override
     void edit() {
         System.out.println("Editing label... Input id ");
-        Long id = Long.valueOf(scanner.next());
+        Long id;
+        while (!scanner.hasNextLong()) {
+            System.out.println("That not correct id");
+            scanner.next();
+        }
+        id = scanner.nextLong();
+        if (labelController.findById(id) == null) {
+            System.out.println("Label with id " + id + "not found");
+            return;
+        }
 
         System.out.println("Input Label new name");
         String name = scanner.next();

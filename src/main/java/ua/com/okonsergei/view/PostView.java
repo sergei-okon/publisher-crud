@@ -51,7 +51,16 @@ public class PostView extends BaseView {
     @Override
     void edit() {
         System.out.println("Editing POST... Input id ");
-        Long id = Long.valueOf(scanner.next());
+        Long id;
+        while (!scanner.hasNextLong()) {
+            System.out.println("That not correct id");
+            scanner.next();
+        }
+        id = scanner.nextLong();
+        if (postController.findById(id) == null) {
+            System.out.println("Post with id " + id + "not found");
+            return;
+        }
 
         System.out.println("Input POST new content");
         scanner.nextLine();
